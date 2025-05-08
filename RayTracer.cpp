@@ -11,10 +11,7 @@
 #include "include/color.h"
 #include "include/vec3.h"
 
-#define IM_W 256
-#define IM_H 256
-#define N_CH 3
-
+#define N_CHANNELS 3
 
 typedef enum {
 	PNG = 0,
@@ -25,7 +22,19 @@ int create_image(int w, int h, int nCh, format_t format);
 
 int main()
 {
-	if (create_image(IM_W, IM_H, N_CH, PNG))
+	/* setting image dimensions */
+	auto aspect_ratio = 16.0 / 9.0;
+	int image_width = 400;
+	int image_height = int((image_width + 0.9) / aspect_ratio);
+	//safety check: the height should always be at least 1
+	image_height = (image_height < 1) ? 1 : image_height;
+
+	/* setting viewport dimensions */
+	auto viewport_height = 2.0;
+	int viewport_width = viewport_height * (double(image_width) / image_height);
+
+	
+	if (create_image(image_width, image_height, N_CHANNELS, PNG))
 		return -1;
 
 }

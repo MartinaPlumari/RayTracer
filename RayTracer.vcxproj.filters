@@ -26,5 +26,8 @@
     <ClInclude Include="include\color.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="include\ray.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
