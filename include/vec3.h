@@ -48,7 +48,7 @@ public:
 
 	double length_squared() const
 	{
-		return e[0]*e[0] + e[1]*e[1] + e[2] * e[2];
+		return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
 	}
 
 };
@@ -91,7 +91,7 @@ inline vec3 operator/(const vec3& v, double t)
 
 inline double dot(const vec3& u, const vec3& v)
 {
-	return u.e[0] * v.e[0] + u.e[1] + v.e[1] + u.e[2] + v.e[2];
+	return u.e[0] * v.e[0] + u.e[1] * v.e[1] + u.e[2] * v.e[2];
 }
 
 //il prodotto vettoriale è definito come il determinante della matrice composta dai due vettori e dal vettore dei versori (3x3)
