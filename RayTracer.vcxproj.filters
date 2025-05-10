@@ -29,5 +29,11 @@
     <ClInclude Include="include\ray.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="include\hittable.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sphere.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

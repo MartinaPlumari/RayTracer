@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stdint.h>
+#include <vector>
 
 #define STBI_MSC_SECURE_CRT
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -11,6 +12,7 @@
 #include "include/color.h"
 #include "include/vec3.h"
 #include "include/ray.h"
+#include "include/sphere.h"
 
 #define N_CHANNELS 3
 
@@ -94,27 +96,22 @@ int main()
 
 }
 
-// checks if the ray hits a sphere defined by its center and radius
-bool hit_sphere(const point3& center, double radius, const ray& r)
-{
-	vec3 oc = center - r.origin();
-	auto a = dot(r.direction(), r.direction());
-	auto b = -2.0 * dot(r.direction(), oc);
-	auto c = dot(oc, oc) - radius*radius;
-	auto delta = b * b - 4 * a * c;
-
-	return (delta >= 0);
-}
-
 //function that returns the color for a given scene ray
 color ray_color(const ray& r)
 {
-	if (hit_sphere(point3(0.0, 0.0, -1), 0.5, r)){
-		return color(1, 0, 0);
+	point3 sphere_center(0.0, 0.0, -1.0);
+	sphere s(sphere_center, 0.5);
+	std::vector<sphere> s_v = { s, sphere(point3(-0.8, 0.0,-1.0), 0.3), sphere(point3(0.8, 0.0,-1.0), 0.3) };
+
+	//if t<0 we don't do anything because the sphere would be behind the camera
+	for (auto s : s_v) {
+		hit_record rec;
+		if (s.hit(r, 0.0, 100.0, rec)) {
+			return 0.5 * color(rec.normal.x() + 1, rec.normal.y() + 1, rec.normal.z() + 1);
+		}
 	}
-	else {
-		vec3 unit_direction = unit_vector(r.direction());
-		auto a = 0.5 * (unit_direction.y() + 1.0); // 0<a<1 the variation is due to the modification of the y component
-		return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
-	}
+	
+	vec3 unit_direction = unit_vector(r.direction());
+	auto a = 0.5 * (unit_direction.y() + 1.0); // 0<a<1 the variation is due to the modification of the y component
+	return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
 }
