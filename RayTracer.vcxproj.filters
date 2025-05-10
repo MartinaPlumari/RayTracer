@@ -35,5 +35,11 @@
     <ClInclude Include="include\sphere.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="include\hittable_list.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rtmath.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

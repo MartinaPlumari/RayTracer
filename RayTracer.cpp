@@ -1,17 +1,13 @@
 // RayTracer.cpp : Questo file contiene la funzione 'main', in cui inizia e termina l'esecuzione del programma.
 //
 
-#include <iostream>
-#include <stdint.h>
-#include <vector>
-
 #define STBI_MSC_SECURE_CRT
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "include/stb_image_write.h"
 
-#include "include/color.h"
-#include "include/vec3.h"
-#include "include/ray.h"
+#include "include/rtmath.h"
+#include "include/hittable.h"
+#include "include/hittable_list.h"
 #include "include/sphere.h"
 
 #define N_CHANNELS 3
@@ -21,18 +17,26 @@ typedef enum {
 	PPM = 1
 } format_t;
 
-color ray_color(const ray& r);
+color ray_color(const ray& r, const hittable& world);
 
 int main()
 {
 	/* setting image dimensions */
+
 	auto aspect_ratio = 16.0 / 9.0;
 	int image_width = 400;
 	int image_height = int(image_width / aspect_ratio);
 	//safety check: the height should always be at least 1
 	image_height = (image_height < 1) ? 1 : image_height;
 
+	/* world settings */
+
+	hittable_list world;
+	world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));
+	world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
+
 	/* camera settings */
+
 	auto focal_length = 1.0;
 	auto camera_center = point3(0, 0, 0);
 	/* setting viewport dimensions */
@@ -54,7 +58,8 @@ int main()
 	auto pixel00_location = viewport_upper_left 
 							+ (pixel_delta_u + pixel_delta_v) * 0.5; 
 
-	/* render */
+	/* RENDER */
+
 	//ti prego metti questa roba in una funzione
 	uint8_t* pixels = new uint8_t[image_width * image_height * N_CHANNELS];
 	uint32_t id = 0;
@@ -72,7 +77,7 @@ int main()
 			auto ray_direction = pixel_center - camera_center;
 			ray r(camera_center, ray_direction);
 
-			color pixel_color = ray_color(r);
+			color pixel_color = ray_color(r, world);
 
 			if (format == PPM)
 				write_color_to_file(std::cout, pixel_color);
@@ -97,19 +102,11 @@ int main()
 }
 
 //function that returns the color for a given scene ray
-color ray_color(const ray& r)
+color ray_color(const ray& r, const hittable& world)
 {
-	point3 sphere_center(0.0, 0.0, -1.0);
-	sphere s(sphere_center, 0.5);
-	std::vector<sphere> s_v = { s, sphere(point3(-0.8, 0.0,-1.0), 0.3), sphere(point3(0.8, 0.0,-1.0), 0.3) };
-
-	//if t<0 we don't do anything because the sphere would be behind the camera
-	for (auto s : s_v) {
-		hit_record rec;
-		if (s.hit(r, 0.0, 100.0, rec)) {
-			return 0.5 * color(rec.normal.x() + 1, rec.normal.y() + 1, rec.normal.z() + 1);
-		}
-	}
+	hit_record rec;
+	if (world.hit(r, 0, inf, rec))
+		return 0.5 * (rec.normal + color(1, 1, 1));
 	
 	vec3 unit_direction = unit_vector(r.direction());
 	auto a = 0.5 * (unit_direction.y() + 1.0); // 0<a<1 the variation is due to the modification of the y component
