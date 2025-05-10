@@ -135,6 +135,7 @@
     <ClInclude Include="include\color.h" />
     <ClInclude Include="include\hittable.h" />
     <ClInclude Include="include\hittable_list.h" />
+    <ClInclude Include="include\interval.h" />
     <ClInclude Include="include\ray.h" />
     <ClInclude Include="include\rtmath.h" />
     <ClInclude Include="include\sphere.h" />

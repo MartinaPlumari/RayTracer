@@ -91,7 +91,7 @@ int main()
 
 	else if (format == PNG)
 	{
-		int retVal = stbi_write_png("image.png", image_width, image_height, N_CHANNELS, pixels, image_width * N_CHANNELS);
+		int retVal = stbi_write_png("output/image.png", image_width, image_height, N_CHANNELS, pixels, image_width * N_CHANNELS);
 		if (retVal == 0)
 		{
 			std::cerr << "Error in saving png image" << std::endl;
@@ -105,7 +105,7 @@ int main()
 color ray_color(const ray& r, const hittable& world)
 {
 	hit_record rec;
-	if (world.hit(r, 0, inf, rec))
+	if (world.hit(r, interval(0, inf), rec))
 		return 0.5 * (rec.normal + color(1, 1, 1));
 	
 	vec3 unit_direction = unit_vector(r.direction());

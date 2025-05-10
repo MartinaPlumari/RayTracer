@@ -41,5 +41,8 @@
     <ClInclude Include="include\rtmath.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="include\interval.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
